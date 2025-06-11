@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Stock Chart{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a> |
+        <a href="/market/">Market Chart</a> |
+        <a href="/about/">About</a> |
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

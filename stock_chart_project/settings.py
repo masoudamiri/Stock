@@ -1,6 +1,8 @@
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# settings.py
+APPEND_SLASH = True
 
 SECRET_KEY = 'dummy-secret-key'
 DEBUG = True
@@ -11,7 +13,10 @@ INSTALLED_APPS = [
     'charts',
 ]
 
-MIDDLEWARE = []
+MIDDLEWARE = [
+    'django.middleware.common.CommonMiddleware',  # ⬅️ مهم برای APPEND_SLASH
+]
+
 
 ROOT_URLCONF = 'stock_chart_project.urls'
 TEMPLATES = [{

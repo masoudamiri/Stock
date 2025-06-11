@@ -5,7 +5,7 @@ import plotly.io as pio
 from django.conf import settings
 import os
 
-def chart_view(request):
+def market_view(request):
     file_path = os.path.join(settings.BASE_DIR, 'ABAD.csv')
     df = pd.read_csv(file_path)
     df['<DTYYYYMMDD>'] = pd.to_datetime(df['<DTYYYYMMDD>'], format='%Y%m%d')
@@ -59,4 +59,6 @@ def chart_view(request):
     fig = go.Figure(data=[volume, candle], layout=layout)
 
     chart_html = pio.to_html(fig, full_html=False)
-    return render(request, 'charts/index.html', {'chart': chart_html})
+    return render(request, 'charts/market.html', {'chart': chart_html})
+
+
