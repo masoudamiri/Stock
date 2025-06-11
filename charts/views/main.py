@@ -6,7 +6,7 @@ from django.conf import settings
 import os
 
 def chart_view(request):
-    file_path = os.path.join(settings.BASE_DIR, 'ABAD.csv')
+    file_path = os.path.join(settings.BASE_DIR,'data', 'ABAD.csv')
     df = pd.read_csv(file_path)
     df['<DTYYYYMMDD>'] = pd.to_datetime(df['<DTYYYYMMDD>'], format='%Y%m%d')
 

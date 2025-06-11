@@ -6,38 +6,42 @@ from django.conf import settings
 import os
 
 def market_view(request):
-    file_path = os.path.join(settings.BASE_DIR, 'ABAD.csv')
+    base = 1000000.0
+    file_path = os.path.join(settings.BASE_DIR,'data', 'ABAD-P1.csv')
     df = pd.read_csv(file_path)
+    
     df['<DTYYYYMMDD>'] = pd.to_datetime(df['<DTYYYYMMDD>'], format='%Y%m%d')
 
-    # اطمینان از عددی بودن TradedShare
-    df['TradedShare'] = pd.to_numeric(df['TradedShare'], errors='coerce').fillna(0)
+    # اطمینان از عددی بودن TradedOfTotalMarket
+    df['TradedOfTotalMarket'] = pd.to_numeric(df['TradedOfTotalMarket'], errors='coerce').fillna(0)
+
+
 
     # محدوده محور y کندل‌ها برای تنظیم نسبت ارتفاع میله‌ها
-    max_price = df['<HIGH>'].max()
-    min_price = df['<LOW>'].min()
-    price_range = max_price - min_price
+    max_price = df['<HIGHMarketValue>'].max()
+    min_price = df['<LOWMarketValue>'].min()
+    price_range = (max_price - min_price)/base
 
     # نرمال‌سازی حجم درصدی و تبدیل آن به مقدار قابل مقایسه با قیمت‌ها
-    df['VolumeHeight'] = (df['TradedShare'] / 100.0) * price_range
-
+    df['VolumeHeight'] = (df['TradedOfTotalMarket'] / 100.0) * price_range
+    print(price_range)
     # کندل‌استیک
     candle = go.Candlestick(
         x=df['<DTYYYYMMDD>'],
-        open=df['<OPEN>'],
-        high=df['<HIGH>'],
-        low=df['<LOW>'],
-        close=df['<CLOSE>'],
+        open=df['<OPENMarketValue>']/base,
+        high=df['<HIGHMarketValue>']/base,
+        low=df['<LOWMarketValue>']/base,
+        close=df['<CloseMarketValue>']/base,
         yaxis='y1',
-        name='Price'
+        name='Value'
     )
 
-    # Bar chart برای TradedShare
+    # Bar chart برای TradedOfTotalMarket
     volume = go.Bar(
         x=df['<DTYYYYMMDD>'],
         y=df['VolumeHeight'],
         yaxis='y1',  # مشترک با y1 تا کنار قیمت بیاد
-        name='Traded Share (%)',
+        name='Total Market (%)',
         marker_color='rgba(255,0,0,1)',
     )
 
@@ -53,7 +57,7 @@ def market_view(request):
         ),
         height=800,
         margin=dict(l=20, r=20, t=40, b=20),
-        showlegend=False
+        showlegend=True
     )
 
     fig = go.Figure(data=[volume, candle], layout=layout)
