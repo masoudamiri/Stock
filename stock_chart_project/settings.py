@@ -6,7 +6,7 @@ APPEND_SLASH = True
 
 SECRET_KEY = 'dummy-secret-key'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['stock.faradat.com', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
